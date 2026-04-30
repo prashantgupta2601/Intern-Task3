@@ -103,12 +103,22 @@ async function fetchProducts() {
 function renderProducts(products) {
     productTableBody.innerHTML = '';
     products.forEach(product => {
+        const isLowStock = product.countInStock < 5;
         const row = document.createElement('tr');
+        if (isLowStock) row.classList.add('table-light');
+
         row.innerHTML = `
-            <td class="ps-4 fw-medium">${product.name}</td>
+            <td class="ps-4 fw-medium">
+                ${product.name}
+                ${isLowStock ? '<span class="badge bg-danger ms-2" style="font-size: 0.65rem;">LOW STOCK</span>' : ''}
+            </td>
             <td><span class="badge bg-secondary bg-opacity-10 text-secondary">${product.category}</span></td>
             <td>$${product.price.toFixed(2)}</td>
-            <td>${product.countInStock}</td>
+            <td>
+                <span class="${isLowStock ? 'text-danger fw-bold' : ''}">
+                    ${product.countInStock}
+                </span>
+            </td>
             <td class="text-end pe-4">
                 <button class="btn btn-sm btn-light text-primary me-2" onclick="editProduct('${product._id}')"><i class="bi bi-pencil-square"></i></button>
                 <button class="btn btn-sm btn-light text-danger" onclick="deleteProduct('${product._id}')"><i class="bi bi-trash"></i></button>
