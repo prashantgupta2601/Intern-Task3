@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const path = require('path');
 const connectDB = require('./config/db');
 const productRoutes = require('./routes/productRoutes');
 
@@ -13,12 +14,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Set static folder
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Routes
 app.use('/api/products', productRoutes);
 
-// Default Route
+// Default Route (Optional if index.html is in public)
 app.get('/', (req, res) => {
-    res.send('API is running...');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const startServer = async () => {
