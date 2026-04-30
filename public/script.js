@@ -102,9 +102,11 @@ async function fetchProducts() {
 // Render products in the table
 function renderProducts(products) {
     productTableBody.innerHTML = '';
-    products.forEach(product => {
+    products.forEach((product, index) => {
         const isLowStock = product.countInStock < 5;
         const row = document.createElement('tr');
+        row.className = 'animate-fade-in';
+        row.style.animationDelay = `${index * 0.05}s`;
         if (isLowStock) row.classList.add('table-light');
 
         row.innerHTML = `
