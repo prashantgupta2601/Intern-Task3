@@ -75,6 +75,17 @@ function updateCharts(products) {
     pieChart.update();
 }
 
+// Update Inventory Insights
+function updateInsights(products) {
+    const totalProducts = products.length;
+    const totalValue = products.reduce((acc, p) => acc + (p.price * p.countInStock), 0);
+    const avgPrice = totalProducts > 0 ? (products.reduce((acc, p) => acc + p.price, 0) / totalProducts) : 0;
+
+    document.getElementById('totalProducts').innerText = totalProducts;
+    document.getElementById('totalValue').innerText = `$${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('avgPrice').innerText = `$${avgPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
 // Fetch and display products
 async function fetchProducts() {
     try {
@@ -82,6 +93,7 @@ async function fetchProducts() {
         allProducts = await response.json();
         renderProducts(allProducts);
         updateCharts(allProducts);
+        updateInsights(allProducts);
     } catch (error) {
         console.error('Error fetching products:', error);
     }
