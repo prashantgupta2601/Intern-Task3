@@ -103,9 +103,24 @@ async function editProduct(id) {
     }
 }
 
-// Placeholder for delete
-function deleteProduct(id) {
-    console.log('Delete requested for:', id);
+// Delete product
+async function deleteProduct(id) {
+    if (confirm('Are you sure you want to delete this product?')) {
+        try {
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                fetchProducts();
+            } else {
+                const error = await response.json();
+                alert(`Error: ${error.message}`);
+            }
+        } catch (error) {
+            console.error('Error deleting product:', error);
+        }
+    }
 }
 
 // Initial fetch
