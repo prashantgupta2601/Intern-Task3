@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api/products';
+const API_URL = '/api/products';
 const productTableBody = document.getElementById('productTableBody');
 const productForm = document.getElementById('productForm');
 const productModal = new bootstrap.Modal(document.getElementById('productModal'));
