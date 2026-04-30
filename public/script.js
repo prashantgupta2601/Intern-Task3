@@ -1,6 +1,7 @@
 const API_URL = 'http://localhost:5000/api/products';
 const productTableBody = document.getElementById('productTableBody');
 const productForm = document.getElementById('productForm');
+const productModal = new bootstrap.Modal(document.getElementById('productModal'));
 
 // Fetch and display products
 async function fetchProducts() {
@@ -32,10 +33,79 @@ function renderProducts(products) {
     });
 }
 
+// Add or Update product
+productForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const productId = document.getElementById('productId').value;
+    const productData = {
+        name: document.getElementById('name').value,
+        category: document.getElementById('category').value,
+        price: parseFloat(document.getElementById('price').value),
+        countInStock: parseInt(document.getElementById('countInStock').value),
+        description: document.getElementById('description').value
+    };
+
+    try {
+        let response;
+        if (productId) {
+            // Update
+            response = await fetch(`${API_URL}/${productId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(productData)
+            });
+        } else {
+            // Create
+            response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(productData)
+            });
+        }
+
+        if (response.ok) {
+            productModal.hide();
+            fetchProducts();
+            productForm.reset();
+        } else {
+            const error = await response.json();
+            alert(`Error: ${error.message}`);
+        }
+    } catch (error) {
+        console.error('Error saving product:', error);
+    }
+});
+
 function openAddModal() {
     document.getElementById('productModalLabel').innerText = 'Add New Product';
     productForm.reset();
     document.getElementById('productId').value = '';
+}
+
+// Edit product (pre-fill form)
+async function editProduct(id) {
+    try {
+        const response = await fetch(`${API_URL}/${id}`);
+        const product = await response.json();
+
+        document.getElementById('productModalLabel').innerText = 'Edit Product';
+        document.getElementById('productId').value = product._id;
+        document.getElementById('name').value = product.name;
+        document.getElementById('category').value = product.category;
+        document.getElementById('price').value = product.price;
+        document.getElementById('countInStock').value = product.countInStock;
+        document.getElementById('description').value = product.description || '';
+
+        productModal.show();
+    } catch (error) {
+        console.error('Error fetching product details:', error);
+    }
+}
+
+// Placeholder for delete
+function deleteProduct(id) {
+    console.log('Delete requested for:', id);
 }
 
 // Initial fetch
