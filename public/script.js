@@ -213,8 +213,24 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
     renderProducts(filteredProducts);
 });
 
+// Auto-refresh logic
+function startAutoRefresh() {
+    let timeLeft = 10;
+    const timerElement = document.getElementById('refreshTimer');
+    
+    setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) {
+            fetchProducts();
+            timeLeft = 10;
+        }
+        timerElement.innerText = `Refreshing in ${timeLeft}s`;
+    }, 1000);
+}
+
 // Initialization
 document.addEventListener('DOMContentLoaded', () => {
     initCharts();
     fetchProducts();
+    startAutoRefresh();
 });
