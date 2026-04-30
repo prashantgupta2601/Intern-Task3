@@ -203,6 +203,16 @@ async function deleteProduct(id) {
     }
 }
 
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    const filteredProducts = allProducts.filter(p => 
+        p.name.toLowerCase().includes(searchTerm) || 
+        p.category.toLowerCase().includes(searchTerm)
+    );
+    renderProducts(filteredProducts);
+});
+
 // Initialization
 document.addEventListener('DOMContentLoaded', () => {
     initCharts();
